@@ -65,7 +65,7 @@ public class BookService {
             throw new RuntimeException("error deleting entity" + entity.getId());
         }
 
-        return retrieve(entity);
+        return repository.findAll();
     }
 
     // book 아이템 검증
