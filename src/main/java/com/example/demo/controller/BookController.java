@@ -31,10 +31,10 @@ public class BookController {
     @PostMapping
     public ResponseEntity<?> createBook(@RequestBody BookDTO dto) {
         try {
-            // String temporaryUserId = "KaYeonSeon";
+            String temporaryUserId = "KaYeonSeon";
             BookEntity entity = BookDTO.toEntity(dto); // dto -> entity 변환
             entity.setId(null); // Id, UserId 초기화
-            // entity.setUserId(temporaryUserId);
+            entity.setUserId(temporaryUserId);
 
             List<BookEntity> entities = service.create(entity); // 서비스를 이용해 todo 엔티티 생성
 
@@ -53,9 +53,9 @@ public class BookController {
 
     @GetMapping
     public ResponseEntity<?> retrieveBookList(@RequestBody BookDTO dto) {
-        // String temporaryUserId = "KaYeonSeon"; // 임시 유저 아이디
+        String temporaryUserId = "KaYeonSeon"; // 임시 유저 아이디
         BookEntity entity = BookDTO.toEntity(dto);
-        // entity.setUserId(temporaryUserId);
+        entity.setUserId(temporaryUserId);
 
         List<BookEntity> entities = service.retrieve(entity); // 서비스를 이용해 todo 엔티티 검색
 
@@ -68,9 +68,9 @@ public class BookController {
 
     @PutMapping
     public ResponseEntity<?> updateBook(@RequestBody BookDTO dto) {
-        // String temporaryUserId = "KaYeonSeon"; // 임시 유저 아이디
+        String temporaryUserId = "KaYeonSeon"; // 임시 유저 아이디
         BookEntity entity = BookDTO.toEntity(dto);
-        // entity.setUserId(temporaryUserId);
+        entity.setUserId(temporaryUserId);
 
         List<BookEntity> entities = service.update(entity); // 서비스를 이용해 todo 엔티티 수정
 
@@ -83,9 +83,9 @@ public class BookController {
     @DeleteMapping
     public ResponseEntity<?> deleteBook(@RequestBody BookDTO dto) {
         try {
-            //String temporaryUserId = "KaYeonSeon"; // 임시 유저 아이디
+            String temporaryUserId = "KaYeonSeon";
             BookEntity entity = BookDTO.toEntity(dto); // dto -> entity 변환
-            entity.setUserId("KaYeonSeon");
+            entity.setUserId(temporaryUserId);
 
             List<BookEntity> entities = service.delete(entity); // 서비스를 이용해 todo 엔티티 삭제
 
