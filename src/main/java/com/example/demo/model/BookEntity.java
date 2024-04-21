@@ -15,8 +15,8 @@ import org.hibernate.annotations.GenericGenerator;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "Todo")
-// 퍼시스턴트, 비즈니스 계층에서 사용되는 데이터
+@Table(name = "Book")
+// 퍼시스턴스, 비즈니스 계층에서 사용되는 데이터
 public class BookEntity {
     @Id
     @GeneratedValue(generator = "system-uuid")
