@@ -31,13 +31,9 @@ public class BookController {
     @PostMapping
     public ResponseEntity<?> createBook(@RequestBody BookDTO dto) {
         try {
-            String temporaryUserId = "KaYeonSeon";
             BookEntity entity = BookDTO.toEntity(dto); // dto -> entity 변환
             entity.setId(null); // Id, UserId 초기화
-            entity.setUserId(temporaryUserId);
-
-            List<BookEntity> entities = service.create(entity); // 서비스를 이용해 todo 엔티티 생성
-
+            List<BookEntity> entities = service.create(entity); // 서비스를 이용해 book 엔티티 생성
             List<BookDTO> dtos = entities.stream().map(BookDTO::new).collect(Collectors.toList()); // entity 리스트 -> dto 리스트 변환
             ResponseDTO<BookDTO> response = ResponseDTO.<BookDTO>builder().data(dtos).build(); // dto 리스트로 ResponseDTO 초기화
 
@@ -52,15 +48,14 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<?> retrieveBookList(@RequestBody BookDTO dto) {
-        String temporaryUserId = "KaYeonSeon"; // 임시 유저 아이디
-        BookEntity entity = BookDTO.toEntity(dto);
-        entity.setUserId(temporaryUserId);
-
-        List<BookEntity> entities = service.retrieve(entity); // 서비스를 이용해 todo 엔티티 검색
-
+    public ResponseEntity<?> retrieveBookList(@RequestParam(required = false) String title) {
+        List<BookEntity> entities;
+        if (title != null && !title.isEmpty()) {
+            entities = service.retrieve(title);
+        } else {
+            entities = service.retrieveAll();
+        }
         List<BookDTO> dtos = entities.stream().map(BookDTO::new).collect(Collectors.toList()); // entity 리스트 -> dto 리스트 변환
-
         ResponseDTO<BookDTO> response = ResponseDTO.<BookDTO>builder().data(dtos).build(); // dto 리스트로 ResponseDTO 초기화
 
         return ResponseEntity.ok().body(response);
@@ -68,12 +63,8 @@ public class BookController {
 
     @PutMapping
     public ResponseEntity<?> updateBook(@RequestBody BookDTO dto) {
-        String temporaryUserId = "KaYeonSeon"; // 임시 유저 아이디
         BookEntity entity = BookDTO.toEntity(dto);
-        entity.setUserId(temporaryUserId);
-
-        List<BookEntity> entities = service.update(entity); // 서비스를 이용해 todo 엔티티 수정
-
+        List<BookEntity> entities = service.update(entity); // 서비스를 이용해 book 엔티티 수정
         List<BookDTO> dtos = entities.stream().map(BookDTO::new).collect(Collectors.toList()); // entity 리스트 -> dto 리스트 변환
         ResponseDTO<BookDTO> response = ResponseDTO.<BookDTO>builder().data(dtos).build(); // dto 리스트로 ResponseDTO 초기화
 
@@ -83,12 +74,8 @@ public class BookController {
     @DeleteMapping
     public ResponseEntity<?> deleteBook(@RequestBody BookDTO dto) {
         try {
-            String temporaryUserId = "KaYeonSeon";
             BookEntity entity = BookDTO.toEntity(dto); // dto -> entity 변환
-            entity.setUserId(temporaryUserId);
-
-            List<BookEntity> entities = service.delete(entity); // 서비스를 이용해 todo 엔티티 삭제
-
+            List<BookEntity> entities = service.delete(entity); // 서비스를 이용해 book 엔티티 삭제
             List<BookDTO> dtos = entities.stream().map(BookDTO::new).collect(Collectors.toList()); // entity 리스트 -> dto 리스트 변환
             ResponseDTO<BookDTO> response = ResponseDTO.<BookDTO>builder().data(dtos).build(); // dto 리스트로 ResponseDTO 초기화
 

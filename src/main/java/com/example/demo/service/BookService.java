@@ -30,12 +30,15 @@ public class BookService {
         repository.save(entity);
         log.info("Entity Id: {} saved.", entity.getId());
 
-        return repository.findByUserId(entity.getUserId());
+        return retrieveAll();
     }
 
     // book 아이템 검색
-    public List<BookEntity> retrieve(final BookEntity entity) {
-        return repository.findByTitle(entity.getTitle());
+    public List<BookEntity> retrieve(final String title) {
+        return repository.findByTitle(title);
+    }
+    public List<BookEntity> retrieveAll() {
+        return repository.findAll();
     }
 
     // book 아이템 수정
@@ -47,10 +50,12 @@ public class BookService {
         original.ifPresent( book -> {
             book.setTitle(entity.getTitle());
             book.setPublisher(entity.getPublisher());
+            book.setAuthor(entity.getAuthor());
+            book.setUserId(entity.getUserId());
             repository.save(book);
         });
 
-        return retrieve(entity);
+        return retrieveAll();
     }
 
     // book 아이템 삭제
@@ -65,7 +70,7 @@ public class BookService {
             throw new RuntimeException("error deleting entity" + entity.getId());
         }
 
-        return repository.findAll();
+        return retrieveAll();
     }
 
     // book 아이템 검증
