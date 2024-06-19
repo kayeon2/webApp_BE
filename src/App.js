@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import { Button, Container, Paper, Grid, AppBar, Toolbar, Typography, IconButton, Menu, MenuItem} from '@mui/material';
+import { Button, Container, Paper, Grid, AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Card, CardMedia, CardContent, CardActions} from '@mui/material';
 import AddBook from "./AddBook"
 import BookRow from './BookRow';
 import RetrieveBook from './RetrieveBook';
 import { call, signout } from './ApiService'
 import DeleteBook from './DeleteBook';
 import UpdateBook from './UpdateBook';
+import BookStoreLogo from "./BookStoreLogo.jpg";
 
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
@@ -20,12 +21,18 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [activeMenu, setActiveMenu] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
+  const [username, setUsername] = useState('');
   
   useEffect(()=> {
     call("/book", "GET", null).then((response) => {
       setItems(response.data);
       setLoading(false);
     });
+
+    const storedUsername = localStorage.getItem('USERNAME');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
   }, []);
 
   // 추가
@@ -71,7 +78,7 @@ function App() {
 
   let content;
   if (loading) {
-    content = <h1> 로딩중.. </h1>;
+    content = <h1> Loading... </h1>;
   }
   else {
     switch(activeMenu) {
@@ -91,6 +98,34 @@ function App() {
         content = <div>메뉴를 선택하세요.</div>;
     }
   }
+
+  let bookCards = 
+    items.length > 0 && (
+      <Grid container spacing={2} style={{ marginTop: 10 }}>
+        {items.map((item) => (
+          <Grid item key={item.id} xs={12} sm={6} md={4} lg={3}>
+            <Card>
+              <CardContent>
+                <Typography gutterBottom variant="h6" component="div">
+                  {item.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {item.author}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {item.publisher}
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button color="primary" onClick={() => deleteItem(item)}>
+                  DELETE
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    );
 
   let bookRows =
     items.length > 0 && (
@@ -126,52 +161,63 @@ function App() {
 
       // navigationBar 추가
   let navigationBar = (
-    <AppBar position="static">
+    <AppBar position="static" style={{ backgroundColor: 'black' }}>
       <Toolbar>
-        <Grid justifyContent="space-between" container>
+        <Grid container justifyContent="space-between" alignItems="center">
           <Grid item>
-            <Typography variant="h6">도서 목록</Typography>
+            <img 
+              src={BookStoreLogo} 
+              alt="Book Store Logo" 
+              style={{ maxWidth: '150px', height: 'auto'}} 
+            />
           </Grid>
           <Grid item>
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              onClick={handleMenuOpen}
-            >
+            <Grid container alignItems="center">
+              <Grid item>
+                <Typography variant="body1" style={{ color: 'white', marginRight: '20px' }}>
+                  {username}님 안녕하세요.
+                </Typography>
+              </Grid>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={handleMenuOpen}
+              >
               <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-            >
-              <MenuItem onClick={() => handleMenuClick('add')}>
-                <AddIcon style={{ marginRight: 10 }} /> 제품 추가
-              </MenuItem>
-              <MenuItem onClick={() => handleMenuClick('retrieve')}>
-                <SearchIcon style={{ marginRight: 10 }} /> 제품 검색
-              </MenuItem>
-              <MenuItem onClick={() => handleMenuClick('update')}>
-                <EditIcon style={{ marginRight: 10 }} /> 제품 수정
-              </MenuItem>
-              <MenuItem onClick={() => handleMenuClick('delete')}>
-                <DeleteIcon style={{ marginRight: 10 }} /> 제품 삭제
-              </MenuItem>
-            </Menu>
-            <IconButton color="inherit" onClick={signout}>
-              <ExitToAppIcon />
-            </IconButton>
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+              >
+                <MenuItem onClick={() => handleMenuClick('add')}>
+                  <AddIcon style={{ marginRight: 10 }} /> 제품 추가
+                </MenuItem>
+                <MenuItem onClick={() => handleMenuClick('retrieve')}>
+                  <SearchIcon style={{ marginRight: 10 }} /> 제품 검색
+                </MenuItem>
+                <MenuItem onClick={() => handleMenuClick('update')}>
+                  <EditIcon style={{ marginRight: 10 }} /> 제품 수정
+                </MenuItem>
+                <MenuItem onClick={() => handleMenuClick('delete')}>
+                  <DeleteIcon style={{ marginRight: 10 }} /> 제품 삭제
+                </MenuItem>
+              </Menu>
+              <IconButton color="inherit" onClick={signout}>
+                <ExitToAppIcon />
+              </IconButton>
+            </Grid>
           </Grid>
         </Grid>
       </Toolbar>
@@ -183,53 +229,66 @@ function App() {
         {navigationBar}
         <Container maxWidth="md">
           <Paper elevation={3} style={{ padding: 20, margin: 10 }}>
-          <Grid container spacing={2} justifyContent="center">
-            <Grid item>
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={() => handleMenuClick('add')}
-              >
-                제품 추가
-              </Button>
+            <Grid container spacing={1} justifyContent="center">
+              <Grid item xs={3}>
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={() => handleMenuClick('add')}
+                  style={{ backgroundColor: 'black'}}
+                  fullWidth
+                >
+                  제품 추가
+                </Button>
+              </Grid>
+              <Grid item xs={3}>
+                <Button
+                  variant="contained"
+                  startIcon={<SearchIcon />}
+                  onClick={() => handleMenuClick('retrieve')}
+                  style={{ backgroundColor: 'black'}}
+                  fullWidth
+                >
+                  제품 검색
+                </Button>
+              </Grid>
+              <Grid item xs={3}>
+                <Button
+                  variant="contained"
+                  startIcon={<EditIcon />}
+                  onClick={() => handleMenuClick('update')}
+                  style={{ backgroundColor: 'black'}}
+                  fullWidth
+                >
+                  제품 수정
+                </Button>
+              </Grid>
+              <Grid item xs={3}>
+                <Button
+                  variant="contained"
+                  startIcon={<DeleteIcon />}
+                  onClick={() => handleMenuClick('delete')}
+                  style={{ backgroundColor: 'black'}}
+                  fullWidth
+                >
+                  제품 삭제
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                startIcon={<SearchIcon />}
-                onClick={() => handleMenuClick('retrieve')}
-              >
-                제품 검색
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                startIcon={<EditIcon />}
-                onClick={() => handleMenuClick('update')}
-              >
-                제품 수정
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                startIcon={<DeleteIcon />}
-                onClick={() => handleMenuClick('delete')}
-              >
-                제품 삭제
-              </Button>
-            </Grid>
-          </Grid>
 
           <div style={{ marginTop: 20 }}>
             {content}
           </div>
-  
+          <div style={{ marginTop: 30 }}>
+            <Typography component="h1" align="center" variant="h5">
+              BOOK LIST
+            </Typography>
+            {bookCards}
+          </div>
             <table
               border="1"
               cellspacing="3"
-              style={{ marginTop: 20, width: '100%' }}
+              style={{ marginTop: 30, width: '100%' }}
             >
               <caption>Book item table</caption>
               <thead>

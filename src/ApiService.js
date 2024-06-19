@@ -42,9 +42,9 @@ export function signin(userDTO) {
     return call("/auth/signin", "POST", userDTO)
     .then((response) => {
         if(response.token) {
-            // 로컬 스토리지에 토큰 저장
+            // 로컬 스토리지에 토큰, 유저 네임 저장
             localStorage.setItem("ACCESS_TOKEN", response.token);
-            // 토큰이 존재하면 메인 화면으로 리디렉트
+            localStorage.setItem("USERNAME", userDTO.username);
             window.location.href = "/";
         }
         // console.log("response: ", response);

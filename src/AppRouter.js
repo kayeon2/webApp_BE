@@ -9,8 +9,7 @@ import { Typography, Box } from "@mui/material";
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
-            {"Copyright"}
-            fsofwareengineer, {new Date().getFullYear} {"."}
+            Copyright 2024. Kayeon Seon. All rights reserved.
         </Typography>
     );
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { Container, Grid, Typography, TextField, Button} from "@mui/material";
 import { Link } from "react-router-dom";
 import { signin } from "./ApiService";
+import BookStoreLogo from "./BookStoreLogo.jpg";
 
 function Login() {
     const handleSubmit = (event) => {
@@ -15,11 +16,18 @@ function Login() {
 
     return (
         <Container component="main" maxWidth="xs" style={{ marginTop: "8%" }}>
-            <Grid container spacing={2}>
+            <Grid item xs={12} style={{ backgroundColor: 'black', textAlign: 'center', padding: '10px', borderRadius: '5px' }}>
+                <img 
+                    src={BookStoreLogo} 
+                    alt="Book Store Logo" 
+                    style={{ maxWidth: '40%', height: 'auto'}} 
+                />
+            </Grid>
+            <Grid container spacing={2} paddingTop={3} paddingBottom={2}>
                 <Grid item xs={12}>
-                <Typography component="h1" variant="h5">
-                    로그인
-                </Typography>
+                    <Typography component="h1" align="center" variant="h5">
+                        Login
+                    </Typography>
                 </Grid>
             </Grid>
             <form noValidate onSubmit={handleSubmit}>
@@ -50,14 +58,25 @@ function Login() {
                         />
                     </Grid>
                     <Grid item xs={12}>
-                        <Button type="submit" fullWidth variant="contained" color="primary">
+                        <Button type="submit" fullWidth variant="contained" style={{ backgroundColor: 'black', color: 'white' }}>
                         로그인
                         </Button>
                     </Grid>
-                    <Grid item>
-                        <Link to="/signup" variant="body2">
-                        계정이 없습니까? 여기서 가입 하세요.
-                        </Link>
+                    <Grid item xs={12}>
+                        <Typography variant="body2" color="textSecondary" align="center" style={{ fontSize: '0.8rem'}}>
+                            아직 회원이 아니신가요?
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button
+                            fullWidth
+                            variant="contained"
+                            style={{ backgroundColor: 'black', color: 'white' }}
+                            component={Link}
+                            to="/signup"
+                        >
+                            회원가입
+                        </Button>
                     </Grid>
                 </Grid>
             </form>
