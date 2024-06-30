@@ -25,7 +25,7 @@ const DeleteBook = (props) => {
                     <Grid item xs={2}>
                         <div style={{ textAlign: 'right' }}>title:</div>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={6}>
                         <TextField
                             name="title"
                             fullWidth
@@ -34,11 +34,10 @@ const DeleteBook = (props) => {
                             value={title}
                         />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                         <Button
                             fullWidth
-                            style={{ height: '100%' }}
-                            color="secondary"
+                            style={{ height: '100%', backgroundColor: '#FFA500', color: '#000000' }}
                             variant="contained"
                             onClick={onButtonClick}
                         >

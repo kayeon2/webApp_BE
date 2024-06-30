@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import { Button, Container, Paper, Grid, AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Card, CardMedia, CardContent, CardActions} from '@mui/material';
+import { Button, Container, Paper, Grid, AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Card, CardContent, CardActions} from '@mui/material';
 import AddBook from "./AddBook"
 import BookRow from './BookRow';
 import RetrieveBook from './RetrieveBook';
@@ -41,6 +41,26 @@ function App() {
     .then((response) => setItems(response.data));
   };
 
+  // 검색
+  // const retrieveItem = async (title) => {
+  //   const response = await call(`/book?title=${title}`, "GET");
+  //   return response.data || [];
+  // };
+
+  const retrieveItem = (title) => {
+    return call(`/book?title=${title}`, "GET")
+    .then((response) => {
+      // setItems(response.data);
+      if (response.data.length > 0) {
+        const item = response.data[0]; // 배열의 첫 번째 객체에 접근
+        return item;
+      } else {
+        console.log('No item found');
+        return null;
+      }
+    });
+  };
+
   // 수정
   const editItem = (item) => {
     call("/book", "PUT", item)
@@ -53,11 +73,7 @@ function App() {
     .then((response) => setItems(response.data));
   }
 
-  // // 메뉴
-  // const handleMenuClick = (menu) => {
-  //   setActiveMenu(menu);
-  // }
-
+  // 메뉴
   const handleMenuClick = (menu) => {
     setActiveMenu(menu);
     setAnchorEl(null);
@@ -72,15 +88,14 @@ function App() {
   };
 
   const addBookUI = <AddBook addItem={addItem} />;
-  const retrieveBookUI = <RetrieveBook items={items} />;
-  const updateBookUI = <UpdateBook items={items} editItem={editItem} />;
+  const retrieveBookUI = <RetrieveBook items={items} retrieveItem={retrieveItem} />;
+  const updateBookUI = <UpdateBook items={items} retrieveItem={retrieveItem} editItem={editItem} />;
   const deleteBookUI = <DeleteBook items={items} deleteItem={deleteItem} />;
 
-  let content;
-  if (loading) {
-    content = <h1> Loading... </h1>;
-  }
-  else {
+  let loadingPage = <h1> Loading... </h1>;
+  let content = loadingPage;
+
+  if (!loading) {
     switch(activeMenu) {
       case 'add':
         content = addBookUI;
@@ -116,8 +131,8 @@ function App() {
                   {item.publisher}
                 </Typography>
               </CardContent>
-              <CardActions>
-                <Button color="primary" onClick={() => deleteItem(item)}>
+              <CardActions style={{ display: 'flex', justifyContent: 'center' }}>
+                <Button style={{ backgroundColor: 'black', color: '#FFFFFF' }} onClick={() => deleteItem(item)}>
                   DELETE
                 </Button>
               </CardActions>
@@ -141,25 +156,7 @@ function App() {
       </tbody>
     );
 
-    // navigationBar 추가
-    // let navigationBar = (
-    //   <AppBar position="static">
-    //     <Toolbar>
-    //       <Grid justifyContent="space-between" container>
-    //         <Grid item>
-    //           <Typography variant="h6">BOOK STORE</Typography>
-    //         </Grid>
-    //         <Grid item>
-    //           <Button color="inherit" raised onClick={signout}>
-    //             로그아웃
-    //           </Button>
-    //         </Grid>
-    //       </Grid>
-    //     </Toolbar>
-    //   </AppBar>
-    // );
-
-      // navigationBar 추가
+  // navigationBar 추가
   let navigationBar = (
     <AppBar position="static" style={{ backgroundColor: 'black' }}>
       <Toolbar>
@@ -306,48 +303,6 @@ function App() {
         </Container>
       </div>
     );
-
-
-    // let todoListPage = (
-    // <div className="App">
-    //   {navigationBar}
-    //   <Container maxWidth="md">
-    //     <Paper elevation={3} style={{ padding: 20, margin: 10 }}>
-    //       <table
-    //         border="1"
-    //         cellspacing="3">
-    //         <caption>Book item table</caption>
-    //         <thead>
-    //           <tr>
-    //               <th>id</th>
-    //               <th>userId</th>
-    //               <th>title</th>
-    //               <th>author</th>
-    //               <th>publisher</th>
-    //           </tr>
-    //         </thead>
-    //         {bookRows}
-    //       </table>
-    //     </Paper>
-    //     <AddBook addItem={addItem} />
-    //     <RetrieveBook items={items} />
-    //     <UpdateBook items={items} editItem={editItem} />
-    //     <DeleteBook items={items} deleteItem={deleteItem} />
-    //   </Container>
-    // </div>
-    // );
-
-    // /* 로딩중일 때 렌더링 할 부분 */
-    // let loadingPage = <h1> Loading... </h1>;
-    // let content = loadingPage;
-
-    // if (!loading) {
-    //   /* 로딩중이 아니면 todoListPage를 선택*/
-    //   content = todoListPage;
-    // }
-
-    // /* 선택한 content 렌더링 */
-    // return <div className="App">{content}</div>;
 }
 
 export default App;

@@ -3,17 +3,20 @@ import { Button, Grid, TextField, Paper } from "@mui/material";
 
 const RetrieveBook = (props) => {
     const [item, setItem] = useState({title: "", author: "", publisher: "", userId: ""});
-    const { items } = props;
+    const { retrieveItem } = props;
 
     // title 값으로 제품 검색
     const onInputChange = (e) => {
         setItem({...item, title: e.target.value});
     };
 
-    const onButtonClick = () => {
-        const itemToRetrieve = items.find(i => i.title === item.title)
-        if(itemToRetrieve) {
-            setItem(itemToRetrieve);
+    const onButtonClick = async () => {
+        const response = await retrieveItem(item.title);
+        if(response) {
+            setItem(response);
+        }
+        else {
+            setItem({title: "", author: "", publisher: "", userId: ""})
         }
     };
 
@@ -24,7 +27,7 @@ const RetrieveBook = (props) => {
                     <Grid item xs={2}>
                         <div style={{ textAlign: 'right' }}>title:</div>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={6}>
                         <TextField
                             name="title"
                             fullWidth
@@ -37,7 +40,7 @@ const RetrieveBook = (props) => {
                     <Grid item xs={2}>
                         <div style={{ textAlign: 'right' }}>author:</div>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={6}>
                         <TextField
                             name="author"
                             fullWidth
@@ -49,7 +52,7 @@ const RetrieveBook = (props) => {
                     <Grid item xs={2}>
                         <div style={{ textAlign: 'right' }}>publisher:</div>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={6}>
                         <TextField
                             name="publisher"
                             fullWidth
@@ -61,18 +64,17 @@ const RetrieveBook = (props) => {
                     <Grid item xs={2}>
                         <div style={{ textAlign: 'right' }}>userId:</div>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={6}>
                         <TextField
                             name="userId"
                             fullWidth
                             value={item.userId}
                         />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                         <Button
                             fullWidth
-                            style={{ height: '100%' }}
-                            color="secondary"
+                            style={{ height: '100%', backgroundColor: '#FFA500', color: '#000000' }}
                             variant="contained"
                             onClick={onButtonClick}
                         >

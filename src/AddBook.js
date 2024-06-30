@@ -3,7 +3,7 @@ import { Button, Grid, TextField, Paper } from "@mui/material";
 
 const AddBook = (props) => {
     // 사용자의 입력을 저장할 오브젝트
-    const [item, setItem] = useState({title: "", author: "", publisher: "", userId: ""});
+    const [item, setItem] = useState({title: "", author: "", publisher: ""});
     const addItem = props.addItem;
 
     // onInputChange 함수 작성
@@ -16,7 +16,7 @@ const AddBook = (props) => {
     // onButtonClick 함수 작성
     const onButtonClick = () => {
         addItem(item);
-        setItem({title: "", author: "", publisher: "", userId: ""});
+        setItem({title: "", author: "", publisher: ""});
     }
 
     return (
@@ -60,8 +60,20 @@ const AddBook = (props) => {
                             value={item.publisher}
                         />
                     </Grid>
+                    <Grid item xs={4}>
+                        <Button
+                            fullWidth
+                            style={{ height: '100%', backgroundColor: '#FFA500', color: '#000000' }}
+                            variant="contained"
+                            onClick={onButtonClick}
+                        >
+                            제품 추가
+                        </Button>
+                    </Grid>
                 </Grid>
-                <Grid container alignItems="center" spacing={2}>
+
+                {/* 백엔드에서 토큰으로 세팅하므로 생략함 */}
+                {/* <Grid container alignItems="center" spacing={2}>
                     <Grid item xs={2}>
                         <div style={{ textAlign: 'right' }}>userId:</div>
                     </Grid>
@@ -73,17 +85,7 @@ const AddBook = (props) => {
                             value={item.userId}
                         />
                     </Grid>
-                    <Grid item xs={4}>
-                        <Button
-                            fullWidth
-                            style={{ height: '100%', backgroundColor: '#FFFF99', color: '#000000' }}
-                            variant="contained"
-                            onClick={onButtonClick}
-                        >
-                            제품 추가
-                        </Button>
-                    </Grid>
-                </Grid>
+                </Grid> */}
             </Paper>
         </div>
     );

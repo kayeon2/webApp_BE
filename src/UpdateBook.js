@@ -3,7 +3,7 @@ import { Button, Grid, TextField, Paper } from "@mui/material";
 
 const UpdateBook = (props) => {
     const [item, setItem] = useState({title: "", author: "", publisher: "", userId: ""});
-    const { items, editItem } = props;
+    const { retrieveItem, editItem } = props;
 
     // title 값으로 제품 검색 후 수정
     const onInputChange = (e) => {
@@ -11,10 +11,13 @@ const UpdateBook = (props) => {
         setItem(prevItem => ({...prevItem, [name]: value}));
     };
 
-    const onButtonClick = () => {
-        const itemToRetrieve = items.find(i => i.title === item.title)
-        if(itemToRetrieve) {
-            setItem(itemToRetrieve);
+    const onButtonClick = async () => {
+        const response = await retrieveItem(item.title);
+        if(response) {
+            setItem(response);
+        }
+        else {
+            setItem({title: "", author: "", publisher: "", userId: ""})
         }
     };
 
@@ -29,7 +32,7 @@ const UpdateBook = (props) => {
                     <Grid item xs={2}>
                         <div style={{ textAlign: 'right' }}>title:</div>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={6}>
                         <TextField
                             name="title"
                             fullWidth
@@ -37,10 +40,10 @@ const UpdateBook = (props) => {
                             value={item.title}
                         />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                         <Button
                             fullWidth
-                            style={{ height: '100%' }}
+                            style={{ height: '100%', backgroundColor: '#FFA500', color: '#000000' }}
                             color="secondary"
                             variant="contained"
                             onClick={onButtonClick}
@@ -53,7 +56,7 @@ const UpdateBook = (props) => {
                     <Grid item xs={2}>
                         <div style={{ textAlign: 'right' }}>author:</div>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={6}>
                         <TextField
                             name="author"
                             fullWidth
@@ -66,7 +69,7 @@ const UpdateBook = (props) => {
                     <Grid item xs={2}>
                         <div style={{ textAlign: 'right' }}>publisher:</div>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={6}>
                         <TextField
                             name="publisher"
                             fullWidth
@@ -79,7 +82,7 @@ const UpdateBook = (props) => {
                     <Grid item xs={2}>
                         <div style={{ textAlign: 'right' }}>userId:</div>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={6}>
                         <TextField
                             name="userId"
                             fullWidth
@@ -87,11 +90,10 @@ const UpdateBook = (props) => {
                             value={item.userId}
                         />
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={4}>
                         <Button
                             fullWidth
-                            style={{ height: '100%' }}
-                            color="secondary"
+                            style={{ height: '100%', backgroundColor: '#FFA500', color: '#000000' }}
                             variant="contained"
                             onClick={editEventHandler}
                         >
